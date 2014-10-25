@@ -1,8 +1,13 @@
 var tessel = require('tessel');
 var ambientlib = require('ambient-attx4');
+var climatelib = require('climate-si7005');
+
 var Camera = require('./camera')
 
 var camera = new Camera('B', 2);
+var climate = climatelib.use(tessel.port['C']);
+var climateR = 0;
+
 
 // require ('take-photo.js');
 
@@ -106,8 +111,18 @@ var count = 0;
 		  
 		  theData.volume = sdata;
 		  console.log(theData);
-		  camera.takePhoto(theData);
+		  
+	      climate.readTemperature('f', function (err, temp) {
+			  
+			  theData.temperature = temp;
+		  	climate.readHumidity(function (err, humid) {
+			  
+  			  theData.humidity = humid;
+			  
+		  	  	camera.takePhoto(theData);
 				
+			});
+	  });
 				
   		});
   });
