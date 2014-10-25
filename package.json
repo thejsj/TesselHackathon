@@ -1,0 +1,15 @@
+{
+  "name": "tessel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "blink.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "camera-vc0706": "^0.1.6",
+    "climate-si7005": "^0.1.3"
+  }
+}
