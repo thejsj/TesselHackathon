@@ -53,6 +53,11 @@
     <script src="./js/config.js" type="text/javascript"></script>
     <script>
     $(function() {
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+          console.log('Great success! All the File APIs are supported.');
+        } else {
+          alert('The File APIs are not fully supported in this browser.');
+        }
         var client = new Dropbox.Client({key: config.apiKey, token: config.token});
 
         // Try to finish OAuth authorization.
@@ -64,7 +69,8 @@
 
         if (client.isAuthenticated()) {
             console.log('Authenticated!')
-            getFileList();
+            getFileList(config.imageDir);
+//            getFileList(config.imageConvertedDir);
 
             // Client is authenticated. Display UI.
         } else {
@@ -74,22 +80,40 @@
         function getFileList() {
             client.readdir(config.imageDir, { deleted: false }, function(error, files, stats){
                 if(error){
-                    alert('Error: ' + error); 
+                    alert('Error: ' + error);
                 } else {
                     for (var i = 0; i < files.length; i++){
-                        var path = config.imageDir +  '/' + files[i];
-                        console.log(files[i]);
-                        var thumbnailUrl = client.thumbnailUrl(path);
-                        var html = 
-                        '<div class="col-lg-3 col-md-4 col-xs-6 thumb">' +
-                            '<a class="thumbnail" href="' + thumbnailUrl + '">' + 
-                         '<img class="img-responsive" src="' + thumbnailUrl + '" alt="">' + 
-                        '<a></div>';
+                        var file = files[i];
+                        var filetype = file.substr(file.length - 3);
+                        if (filetype === 'jpg') {
 
-                        $('#image_list').append(html);
-                    } 
+                            // Get JSON
+                            var json_file = config.imageDir + '/' + file.substr(0, file.length - 3) + 'json';
+                            client.readFile(json_file, {}, function (error, string, stat) {
+                                var data = JSON.parse(string);
+                                var path = config.imageDir +  '/' + files[i];
+                                var thumbnailUrl = client.thumbnailUrl(path);
+                                var html =
+                                '<div class="col-lg-3 col-md-4 col-xs-6 thumb">' +
+                                    '<a class="thumbnail" href="' + thumbnailUrl + '">' +
+                                 '<img class="img-responsive" src="' + thumbnailUrl + '" alt="">' +
+                                '<a></div>';
+                                $('#image_list').append(html);
+
+                                var path = config.imageConvertedDir +  '/' + files[i];
+                                var thumbnailUrl = client.thumbnailUrl(path);
+                                var html =
+                                '<div class="col-lg-3 col-md-4 col-xs-6 thumb">' +
+                                    '<a class="thumbnail" href="' + thumbnailUrl + '">' +
+                                 '<img class="img-responsive" src="' + thumbnailUrl + '" alt="">' +
+                                '<a></div>';
+                                $('#image_list').append(html);
+                                // converted image
+                            });
+                        }
+                    }
                 }
-                
+
             });
         }
     });
