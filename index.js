@@ -1,10 +1,10 @@
 var tessel = require('tessel');
 var Camera = require('./modules/camera');
+var ImageProcessor = require('./modules/image-processor');
 
-// Set the led pins as outputs with initial states
-// Truthy initial state sets the pin high
-// Falsy sets it low.
+// Instances
 var camera = new Camera('A', 1);
+var image_processor = new ImageProcessor();
 
 setInterval(function () {
     // get data
