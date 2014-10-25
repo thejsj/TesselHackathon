@@ -44,3 +44,9 @@ function processImage(data, image) {
         new_image: new_image // string
     };
 }
+processImage({
+    'temperature': 80,
+    'volume': 0.5,
+    'humidity': 50, //percentage
+    'light': 0.5
+}, '')

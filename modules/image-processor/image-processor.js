@@ -6,7 +6,7 @@ var ImageProcessor = function () {
 
     };
 
-    self.process = function () {
+    self.process = function (data, original_image) {
 
     };
 
