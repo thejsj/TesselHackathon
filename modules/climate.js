@@ -4,7 +4,6 @@ var climatelib = require('climate-si7005');
 
 var climate = climatelib.use(tessel.port['A']);
 
-
 climate.on('ready', function () {
   console.log('Connected to si7005');
 
