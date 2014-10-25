@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ambient-attx4": "^0.2.4",
     "camera-vc0706": "^0.1.6",
     "chokidar": "^0.10.2",
     "climate-si7005": "^0.1.3",

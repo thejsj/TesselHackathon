@@ -3,24 +3,24 @@ var ImageProcessor = require('./modules/image-processor/image-processor');
 var _ = require('lodash');
 
 var image_processor = new ImageProcessor();
-var watcher = chokidar.watch(process.env.PWD + '/pics', {
+console.log(process.env.PWD + '/data');
+var data_watcher = chokidar.watch(process.env.PWD + '/data', {
     ignored: /^\./,
     persistent: true
 });
 
-watcher
-    .on('change', function (path, stats) {
-        if (_.last(path.split('/')) === '.DS_Store') {
-            return false;
+data_watcher
+    .on('all', function (type, path, stats) {
+        if (_.last(path.split('.')) === 'jpg' || _.last(path.split('.')) === 'png') {
+            processImage({
+                'temperature': 80,
+                'volume': 0.5,
+                'humidity': 50, //percentage
+                'light': 0.5
+            }, path, process.env.PWD, function (new_filename) {
+                console.log('Image Added and Processed');
+            });
         }
-        processImage({
-            'temperature': 80,
-            'volume': 0.5,
-            'humidity': 50, //percentage
-            'light': 0.5
-        }, path, process.env.PWD, function (new_filename) {
-            console.log('Image Added and Processed');
-        });
     });
 
 // Jorge Does stuff in this function
