@@ -6,11 +6,6 @@ var Camera = require('./modules/camera');
 // Falsy sets it low.
 var camera = new Camera('A', 1);
 
-tessel.button.on('press', function (time) {
-    console.log('Button Press');
-    camera.takePhoto();
-});
-
 setInterval(function () {
     // get data
     data = getData();
@@ -41,11 +36,11 @@ function getData() {
 }
 
 // Jorge Does stuff in this function
-function (data, image) {
+function processImage(data, image) {
 
     return {
         data: data,
         image: imagge, //string
         new_image: new_image // string
-    }
+    };
 }
