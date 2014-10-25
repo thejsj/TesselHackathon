@@ -118,7 +118,7 @@ var count = 0;
 		  	climate.readHumidity(function (err, humid) {
 			  
   			  theData.humidity = humid;
-			  
+			  theData.time = Math.floor(Date.now());
 		  	  	camera.takePhoto(theData);
 				
 			});
