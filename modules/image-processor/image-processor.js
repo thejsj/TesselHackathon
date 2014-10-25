@@ -24,7 +24,7 @@ var ImageProcessor = function () {
 
     __self.getNewFilename = function (filename) {
         var split_name = filename.split('/');
-        return 'processed-' + _.last(split_name);
+        return _.last(split_name);
     };
 
     return self;

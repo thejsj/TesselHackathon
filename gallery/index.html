@@ -77,6 +77,20 @@
             alert('Authentication failed');
         }
 
+        function getPrettyDate (timestamp) {
+            var date = new Date(timestamp*1000);
+            // hours part from the timestamp
+            var hours = date.getHours();
+            // minutes part from the timestamp
+            var minutes = "0" + date.getMinutes();
+            // seconds part from the timestamp
+            var seconds = "0" + date.getSeconds();
+
+            // will display time in 10:30:23 format
+            var formattedTime = hours + ':' + minutes.substr(minutes.length-2) + ':' + seconds.substr(seconds.length-2);
+            return formattedTime;
+        }
+
         function getFileList() {
             client.readdir(config.imageDir, { deleted: false }, function(error, files, stats){
                 if(error){
@@ -86,30 +100,40 @@
                         var file = files[i];
                         var filetype = file.substr(file.length - 3);
                         if (filetype === 'jpg') {
-
                             // Get JSON
+                            var _file = file;
                             var json_file = config.imageDir + '/' + file.substr(0, file.length - 3) + 'json';
-                            client.readFile(json_file, {}, function (error, string, stat) {
-                                var data = JSON.parse(string);
-                                var path = config.imageDir +  '/' + files[i];
-                                var thumbnailUrl = client.thumbnailUrl(path);
-                                var html =
-                                '<div class="col-lg-3 col-md-4 col-xs-6 thumb">' +
-                                    '<a class="thumbnail" href="' + thumbnailUrl + '">' +
-                                 '<img class="img-responsive" src="' + thumbnailUrl + '" alt="">' +
-                                '<a></div>';
-                                $('#image_list').append(html);
+                            (function (_file) {
+                                client.readFile(json_file, {}, function (error, string, stat) {
+                                    var data = JSON.parse(string);
+                                    var path = config.imageDir +  '/' + _file;
+                                    var thumbnailUrl = client.thumbnailUrl(path, {'size': 'l'});
 
-                                var path = config.imageConvertedDir +  '/' + files[i];
-                                var thumbnailUrl = client.thumbnailUrl(path);
-                                var html =
-                                '<div class="col-lg-3 col-md-4 col-xs-6 thumb">' +
-                                    '<a class="thumbnail" href="' + thumbnailUrl + '">' +
-                                 '<img class="img-responsive" src="' + thumbnailUrl + '" alt="">' +
-                                '<a></div>';
-                                $('#image_list').append(html);
-                                // converted image
-                            });
+                                    var _converted_path = config.imageConvertedDir +  '/' + _file;
+                                    var _converted_thumbnailUrl = client.thumbnailUrl(_converted_path, {'size': 'l'});
+                                    var time = data.time;
+
+                                    var html =
+                                    '<div class="row">' +
+                                    '<div class="col-lg-3 col-md-4 col-xs-6 thumb">' +
+                                        '<a class="thumbnail" href="' + thumbnailUrl + '">' +
+                                     '<img class="img-responsive" src="' + thumbnailUrl + '" alt="">' +
+                                    '<a></div>' +
+                                    '<div class="col-lg-3 col-md-4 col-xs-6 thumb">' +
+                                        '<a class="thumbnail" href="' + _converted_thumbnailUrl + '">' +
+                                     '<img class="img-responsive" src="' + _converted_thumbnailUrl + '" alt="">' +
+                                    '<a></div>'+
+                                    '<div class="col-lg-3 col-md-4 col-xs-6 thumb">' +
+                                    '<p>Temperature: ' + data.temperature +'</p>'+
+                                    '<p>Humidity: ' + data.humidity + '</p>'+
+                                    '<p>Volume: ' + data.volume + '</p>'+
+                                    '<p>Light: ' + data.light + '</p>'+
+                                    '<p>Time: ' + time + '</p>'+
+                                    '</div>'+
+                                    '</div>';
+                                    $('#image_list').append(html);
+                                });
+                            }(_file));
                         }
                     }
                 }
