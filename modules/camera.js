@@ -16,13 +16,9 @@ var Camera = function (port, led_port) {
   };
 
   self.takePhoto = function (paramData) {
-	  console.log(paramData);
-    console.log('Camera: takePhoto');
     if (__self.ready) {
-      console.log('1');
       __self.notificationLED.high();
       // Take the picture
-      console.log('2');
       __self.camera.takePicture(function (err, image) {
         console.log('TAKE PIC!!!');
         if (err) {
@@ -30,18 +26,15 @@ var Camera = function (port, led_port) {
         } else {
           __self.notificationLED.low();
           // Name the image
-		  var timeStamp = Math.floor(Date.now());
+          var timeStamp = paramData.time;
           var name = './images/picture-' + timeStamp + '.jpg';
-		  var json_Name = './json/picture-' + timeStamp + '.json';
-		  
+          var json_Name = './json/picture-' + timeStamp + '.json';
           // Save the image
           console.log('Picture saving as', name, '...');
-          
           console.log('done.');
-			
-	      process.sendfile(name, image);	
-		  console.log(paramData );
-		  process.sendfile(json_Name, JSON.stringify(paramData));
+          process.sendfile(json_Name, JSON.stringify(paramData));
+          process.sendfile(name, image);
+          console.log(paramData);
           // Turn the camera off to end the script
           //__self.camera.disable();
         }
@@ -49,7 +42,7 @@ var Camera = function (port, led_port) {
     } else {
       console.log('Camera Not Ready!');
     }
-	
+
   };
 
   __self.errorHandler = function (err) {

@@ -18,11 +18,8 @@ var ImageConverter = function () {
         var command_string = __self.getCommandString(original_image_name, direcotry, image_parameters);
         var __filename = __self.getTempFilename(direcotry, original_image_name);
         exec(command_string, function () {
-            console.log('__filename');
-            console.log(__filename);
             fs.readFile(__filename, function (err, image_data) {
                 if (err) throw err;
-                console.log(image_data);
                 if (typeof callback === 'function') {
                     callback(image_data);
                 }
@@ -38,7 +35,6 @@ var ImageConverter = function () {
         command += ' ' + '-set option:modulate:colorspace hsb';
         command += ' -modulate ' + p.hue + ',' + p.saturation + ',' + p.brightness;
         command += ' \"' + __self.getTempFilename(direcotry, original_image_name) + '\"';
-        console.log(command);
         return command;
     };
 
