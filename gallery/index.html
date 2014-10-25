@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Gallery</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/thumbnail-gallery.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+    <!-- Page Content -->
+    <div class="container">
+
+        <div class="row" id="image_list">
+
+            <div class="col-lg-12">
+                <h1 class="page-header">Magic camera</h1>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <!-- Footer -->
+    </div>
+    <!-- /.container -->
+
+    <!-- jQuery Version 1.11.0 -->
+    <script src="js/jquery-1.11.0.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://www.dropbox.com/static/api/dropbox-datastores-1.2-latest.js" type="text/javascript"></script>
+    <script src="./js/config.js" type="text/javascript"></script>
+    <script>
+    $(function() {
+        var client = new Dropbox.Client({key: config.apiKey, token: config.token});
+
+        // Try to finish OAuth authorization.
+        client.authenticate({interactive: false}, function (error) {
+            if (error) {
+                alert('Authentication error: ' + error);
+            }
+        });
+
+        if (client.isAuthenticated()) {
+            console.log('Authenticated!')
+            getFileList();
+
+            // Client is authenticated. Display UI.
+        } else {
+            alert('Authentication failed');
+        }
+
+        function getFileList() {
+            client.readdir(config.imageDir, { deleted: false }, function(error, files, stats){
+                if(error){
+                    alert('Error: ' + error); 
+                } else {
+                    for (var i = 0; i < files.length; i++){
+                        var path = config.imageDir +  '/' + files[i];
+                        console.log(files[i]);
+                        var thumbnailUrl = client.thumbnailUrl(path);
+                        var html = 
+                        '<div class="col-lg-3 col-md-4 col-xs-6 thumb">' +
+                            '<a class="thumbnail" href="' + thumbnailUrl + '">' + 
+                         '<img class="img-responsive" src="' + thumbnailUrl + '" alt="">' + 
+                        '<a></div>';
+
+                        $('#image_list').append(html);
+                    } 
+                }
+                
+            });
+        }
+    });
+    </script>
+
+</body>
+
+</html>
