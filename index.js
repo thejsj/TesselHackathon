@@ -37,7 +37,7 @@ function getData() {
 
 // Jorge Does stuff in this function
 function processImage(data, image) {
-
+    image_processor.process(data, image);
     return {
         data: data,
         image: imagge, //string
