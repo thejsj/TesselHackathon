@@ -10,3 +10,42 @@ tessel.button.on('press', function (time) {
     console.log('Button Press');
     camera.takePhoto();
 });
+
+setInterval(function () {
+    // get data
+    data = getData();
+    // Yuri decieds if we are going to take a photo or not
+    if (false === true) {
+        takePhoto();
+    }
+}, 100);
+
+// Yuri calls this function
+function takePhoto() {
+
+    // Get Data
+    data = getData();
+
+    processImage(data, original_image);
+}
+
+// Ryan writes this function
+function getData() {
+
+    return {
+        'temperature': 80,
+        'volume': 0.5,
+        'humidity': 50, //percentage
+        'light': 0.5
+    }; // {}
+}
+
+// Jorge Does stuff in this function
+function (data, image) {
+
+    return {
+        data: data,
+        image: imagge, //string
+        new_image: new_image // string
+    }
+}

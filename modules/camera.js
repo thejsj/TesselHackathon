@@ -23,6 +23,7 @@ var Camera = function (port, led_port) {
       // Take the picture
       console.log('2');
       __self.camera.takePicture(function (err, image) {
+        console.log('TAKE PIC!!!');
         if (err) {
           console.log('error taking image', err);
         } else {
@@ -34,7 +35,7 @@ var Camera = function (port, led_port) {
           process.sendfile(name, image);
           console.log('done.');
           // Turn the camera off to end the script
-          __self.camera.disable();
+          //__self.camera.disable();
         }
       });
     } else {
